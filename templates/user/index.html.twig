@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}User index{% endblock %}
+
+{% block body %}
+{% if is_granted('ROLE_ADMIN') %}
+    <h1>User index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Password</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>IsBanned</th>
+                <th>IsCoach</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ user.id }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.roles ? user.roles|json_encode : '' }}</td>
+                <td>{{ user.password }}</td>
+                <td>{{ user.Nom }}</td>
+                <td>{{ user.prenom }}</td>
+                <td>{{ user.isBanned ? 'Yes' : 'No' }}</td>
+                <td>{{ user.isCoach ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('app_user_show', {'id': user.id}) }}">show</a>
+                    <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="8">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_user_new') }}">Create new</a>
+    {% endif %}
+    {% if is_granted('ROLE_USER') %}
+        <h1>Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</h1>
+        <p>Vous êtes connecté en tant que {{ app.user.email }}</p>
+        <a href="{{ path('app_user_seances', {'id': app.user.id}) }}">voir mes seances</a>
+    {% endif %}
+
+    {% if is_granted('ROLE_BANNED') %}
+        <p style="color: red;">⚠️ Vous êtes banni. Vous ne pouvez pas accéder aux fonctionnalités.</p>
+    {% endif %}
+{% endblock %}

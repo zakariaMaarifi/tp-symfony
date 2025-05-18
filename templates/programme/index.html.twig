@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Programme index{% endblock %}
+
+{% block body %}
+    <h1>Programme index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Titre</th>
+                <th>Description</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for programme in programmes %}
+            <tr>
+                <td>{{ programme.id }}</td>
+                <td>{{ programme.titre }}</td>
+                <td>{{ programme.description }}</td>
+                {# <td>
+                    <a href="{{ path('app_programme_show', {'id': programme.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_programme_edit', {'id': programme.id}) }}">edit</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('app_programme_seances', {'id': programme.id}) }}">voir les séances disponibles</a>
+                    {% endif %}
+                </td> #}
+                <td>
+                    <a href="{{ path('app_programme_show', {'id': programme.id}) }}">show</a>
+                    {# {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_programme_edit', {'id': programme.id}) }}">edit</a>
+                    {% endif %} #}
+                    {% if is_granted('ROLE_ADMIN') or (app.user and app.user.isCoach and programme.coach and programme.coach.user.id == app.user.id) %}
+                        <a href="{{ path('app_programme_edit', {'id': programme.id}) }}">edit</a>
+                    {% endif %}
+                    {% if is_granted('ROLE_USER') %}
+                        <a href="{{ path('app_programme_seances', {'id': programme.id}) }}">voir les séances disponibles</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_granted('ROLE_ADMIN') or (app.user and app.user.isCoach) %}
+        <a href="{{ path('app_programme_new') }}">Create new</a>
+    {% endif %}
+    <a href="{{ path('app_home_page') }}">HomePage</a>
+{% endblock %}

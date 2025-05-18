@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Coach index{% endblock %}
+
+{% block body %}
+    <h1>Coach index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Nom</th>
+                <th>Prenom</th>
+                <th>Specialite</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for coach in coaches %}
+            <tr>
+                <td>{{ coach.id }}</td>
+                <td>{{ coach.Nom }}</td>
+                <td>{{ coach.Prenom }}</td>
+                <td>{{ coach.specialite }}</td>
+                <td>
+                    <a href="{{ path('app_coach_show', {'id': coach.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_coach_edit', {'id': coach.id}) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_coach_new') }}">Create new</a>
+    {% endif %}
+    <a href="{{ path('app_home_page') }}">HomePage</a>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Seance index{% endblock %}
+
+{% block body %}
+    <h1>Seance index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Statut</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for seance in seances %}
+            <tr>
+                <td>{{ seance.id }}</td>
+                <td>{{ seance.date ? seance.date|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ seance.statut }}</td>
+                <td>
+                    <a href="{{ path('app_seance_show', {'id': seance.id}) }}">show</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                    <a href="{{ path('app_seance_edit', {'id': seance.id}) }}">edit</a>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="4">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% if is_granted('ROLE_ADMIN') %}
+    <a href="{{ path('app_seance_new', {'programmeId': programme.id}) }}">Create new</a>
+    {% endif %}
+{% endblock %}

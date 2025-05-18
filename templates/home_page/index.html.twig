@@ -1,0 +1,32 @@
+<nav>
+    {% if app.user %}
+        <h1>Coach ELLA Votre plateforme de coaching</h1>
+        <h2>Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</h2>
+
+        {% if is_granted('ROLE_BANNED') %}
+            <p style="color: red;">⚠️ Vous êtes banni. Vous ne pouvez pas accéder aux fonctionnalités.</p>
+        {% else %}
+            {% if is_granted('ROLE_ADMIN') %}
+                <h2>Admin Dashboard</h2>
+                <a href="{{ path('app_user_index') }}">Gérer les utilisateurs</a>
+                <a href="{{ path('app_seance_index') }}">gérer les séances</a>
+                <a href="{{ path('app_coach_index') }}">gérer les coachs</a>
+                <a href="{{ path('app_programme_index') }}">gérer les programmes</a>
+            {% endif %}
+
+            {% if is_granted('ROLE_USER') %}
+                <a href="{{ path('app_programme_index') }}">Consulter les programmes</a>
+                <a href="{{ path('app_coach_index') }}">Consulter les coachs</a>
+                <a href="{{ path('app_user_index') }}">Mon Profil</a>
+
+
+            {% endif %}
+        {% endif %}
+
+        <form method="post" action="{{ path('app_logout') }}">
+            <button type="submit">Déconnexion</button>
+        </form>
+    {% else %}
+        <a href="{{ path('app_login') }}">Connexion</a>
+    {% endif %}
+</nav>
